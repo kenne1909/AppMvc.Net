@@ -180,6 +180,8 @@ thường dùng để lưu trữ dữ liệu khi chuyển hướng (redirect).*/
     
         [TempData]
         public string? StatusMessage{set;get;}
+
+        [AcceptVerbs("POST","GET")]// chỉ có thể truy cập bằng pt post
         public IActionResult ViewProduct(int? id)
         {
             var product= _productService.Where(p=> p.Id == id).FirstOrDefault();

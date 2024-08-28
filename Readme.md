@@ -18,3 +18,36 @@ options.ViewLocationFormats.Add("/MyView/{1}/{0}"+RazorViewEngine.ViewExtension)
 - ViewData
 - ViewBag
 - TempData
+
+## Area
+- Là tên dùng để routing
+- Là cấu trúc thư mục chưa M.V.C
+- Thiết lập Area cho controller bằng ```[Area("AreaName")]```
+- Tạo thư mục cấu trúc
+```
+dotnet aspnet-codegenerator area Product
+```
+
+## Route
+- endpoints.MapControllerRoute
+- endpoints.MapAreaControllerRoute
+- [AcceptVerbs("POST","GET")]
+- [Route("pattern)]
+- [HttpPost] [HttpGet]
+
+## Url Generation
+### UrlHelper: Action, ActionLink, RouteUrl, Link
+```
+Url.Action("PlanetInfo","Planet",new {id=1}, Context.Request.Scheme)
+
+Url.RouteUrl("default",new {controller="First",action="HelloView",id =1,userName="LeHoan"})
+```
+### HtmlTagHelper: ```<a> <button> <form>```
+sử dụng thuộc tính
+```
+<li>asp-area="Area</li>
+<li>asp-action="Action</li>
+<li>asp-controller="Product</li>
+<li>asp-route-...="1234</li>
+<li>asp-route="default</li>
+```

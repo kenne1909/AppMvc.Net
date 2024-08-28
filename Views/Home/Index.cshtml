@@ -1,6 +1,14 @@
 ﻿@{
     ViewData["Title"] = "Home Page";
     @* TempData["thongbao"] *@
+
+    @* Url.Action *@
+    @* Url.ActionLink *@
+
+    @* Url.RouteUrl() sử dụng tên route để sinh ra url theo route đó *@
+    @* Url.Link() *@
+
+
 }
 
 <partial name="_AlertMessage"/>
@@ -8,3 +16,39 @@
     <h1 class="display-4">Xin chào</h1>
     <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
 </div>
+
+<p>
+    @Url.ActionLink()
+</p>
+<p>
+    @Url.Action()
+</p>
+<p>
+    @Url.Action("Privacy")
+</p>
+
+<p>
+    @Url.Action("Privacy", new {id = 123, name="Lehoan"})
+</p>
+
+<p>
+    @Url.Action("Jupiter","Planet", new {id = 123, name="Lehoan"})
+</p>
+
+<p>
+    @Url.Action("Index","Product",new {area="ProductManage"})
+</p>
+
+<p>
+    @Url.RouteUrl("default", new { action = "HelloView", controller="Home",id =123})
+</p>
+
+<p>@Url.RouteUrl("neptune1")</p>
+
+<ul>
+    <li>asp-area="Area</li>
+    <li>asp-action="Action</li>
+    <li>asp-controller="Product</li>
+    <li>asp-route-...="1234</li>
+    <li>asp-route="default</li>
+</ul>
