@@ -1,11 +1,20 @@
 using System.Net;
 using App.ExtendMethods;
+using App.Models;
 using App.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.AspNetCore.Routing.Constraints;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddDbContext<AppDbContext>(options =>{
+    // string? connectString=builder.Configuration.GetConnectionString("MyBlogContext");
+    // options.UseSqlServer(connectString);
+
+    options.UseSqlServer(builder.Configuration.GetConnectionString("AppMvcConnectionString"));
+});
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
