@@ -1,0 +1,19 @@
+.app-navbar{
+    background: rgba(0, 0, 0, 0.8);
+    .text-dark{
+        color: #b9c3ce !important;//ghi đè
+        &:hover {
+            color: white !important;
+        }
+    }
+    .navbar-brand {
+        color: #a57dea;
+        &:hover {
+            color: #d727da !important;
+        }
+    }
+    .dropdown-toggle{
+        border-color: #a562ad;
+        color:  #ae84ba;
+    }
+}

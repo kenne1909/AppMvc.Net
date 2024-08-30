@@ -1,0 +1,16 @@
+body{
+    background: #fff;
+    color: #1d1d1f;
+}
+
+html {
+    position: relative;
+    min-height: 100%;
+}
+  
+body {
+    margin-bottom: 60px;
+}
+
+@import "menu";// chèn file _menu vào ở vị trí này
+@import "contact"
