@@ -1,4 +1,5 @@
 using System.Net;
+using App.Data;
 using App.ExtendMethods;
 using App.Models;
 using App.Services;
@@ -9,6 +10,13 @@ using Microsoft.AspNetCore.Routing.Constraints;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddOptions();
+var mailSetting  = builder.Configuration.GetSection("MailSettings");
+builder.Services.Configure<MailSettings>(mailSetting);
+builder.Services.AddSingleton<IEmailSender, SendMailService>();
+
+builder.Services.AddSingleton<IdentityErrorDescriber,AppIdentityErrorDescriber>();
 
 builder.Services.AddDbContext<AppDbContext>(options =>{
     // string? connectString=builder.Configuration.GetConnectionString("MyBlogContext");
@@ -100,6 +108,13 @@ builder.Services.AddAuthentication()
                 // .AddTwitter()
                 // .AddMicrosoftAccount()
                 ;
+
+builder.Services.AddAuthorization(option =>{
+    option.AddPolicy("ViewManageMenu",builder=>{
+        builder.RequireAuthenticatedUser();
+        builder.RequireRole(RoleName.Administrator);
+    });
+});
 
 var app = builder.Build();
 
