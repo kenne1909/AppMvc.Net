@@ -2,6 +2,7 @@ using System.Net;
 using App.ExtendMethods;
 using App.Models;
 using App.Services;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.AspNetCore.Routing.Constraints;
@@ -35,6 +36,70 @@ builder.Services.AddSingleton<ProductService>();
 // builder.Services.AddSingleton(typeof(ProductService),typeof(ProductService));
 
 builder.Services.AddSingleton<PlanetService>();
+
+// đăng ký Identity
+builder.Services.AddIdentity<AppUser, IdentityRole>()
+                .AddEntityFrameworkStores<AppDbContext>()
+                .AddDefaultTokenProviders();
+
+// Truy cập IdentityOptions
+builder.Services.Configure<IdentityOptions> (options => {
+    // Thiết lập về Password
+    options.Password.RequireDigit = false; // Không bắt phải có số
+    options.Password.RequireLowercase = false; // Không bắt phải có chữ thường
+    options.Password.RequireNonAlphanumeric = false; // Không bắt ký tự đặc biệt
+    options.Password.RequireUppercase = false; // Không bắt buộc chữ in
+    options.Password.RequiredLength = 3; // Số ký tự tối thiểu của password
+    options.Password.RequiredUniqueChars = 1; // Số ký tự riêng biệt
+
+    // Cấu hình Lockout - khóa user
+    options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes (5); // Khóa 5 phút
+    options.Lockout.MaxFailedAccessAttempts = 3; // Thất bại 3 lầ thì khóa
+    options.Lockout.AllowedForNewUsers = true;
+
+    // Cấu hình về User.
+    options.User.AllowedUserNameCharacters = // các ký tự đặt tên user
+        "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._@+";
+    options.User.RequireUniqueEmail = true;  // Email là duy nhất
+
+    // Cấu hình đăng nhập.
+    options.SignIn.RequireConfirmedEmail = true;            // Cấu hình xác thực địa chỉ email (email phải tồn tại)
+    options.SignIn.RequireConfirmedPhoneNumber = false;     // Xác thực số điện thoại
+    options.SignIn.RequireConfirmedAccount = true;         // Người dùng phải xác nhận tài khoản
+});
+
+builder.Services.ConfigureApplicationCookie(options =>{
+    options.LoginPath = "/login/";
+    options.LogoutPath= "/logout/";
+    options.AccessDeniedPath = "/Identity/Account/AccessDenied"; //đường dẫn tới trang khi user bị cấm truy cập
+});
+
+builder.Services.AddAuthentication()
+                .AddGoogle(options =>{
+                    IConfigurationSection? gconfi = builder.Configuration.GetSection("Authentication:Google");
+
+                    string clientId = gconfi["ClientId"] ?? throw new InvalidOperationException("Google ClientId chưa được định cấu hình.");
+                    string clientSecret = gconfi["ClientSecret"] ?? throw new InvalidOperationException("Google ClientSecret chưa được định cấu hình.");
+                    
+                    options.ClientId =clientId;
+                    options.ClientSecret = clientSecret;
+                    // https://localhost:7134/signin-google nếu k thiết lập CallbackPath 
+                    options.CallbackPath = "/dang-nhap-tu-google";
+                })
+                .AddFacebook(options => {
+                    IConfigurationSection? gconfi = builder.Configuration.GetSection("Authentication:Facebook");
+                    string appId = gconfi["AppId"] ?? throw new InvalidOperationException("Facebook AppId chưa được định cấu hình.");
+                    string appSecret = gconfi["AppSecret"] ?? throw new InvalidOperationException("Facebook AppSecret chưa được định cấu hình.");
+
+                    options.AppId =appId;
+                    options.AppSecret = appSecret;
+                    // https://localhost:7134/signin-google nếu k thiết lập CallbackPath 
+                    options.CallbackPath = "/dang-nhap-tu-facebook";
+                })
+                // .AddFacebook()
+                // .AddTwitter()
+                // .AddMicrosoftAccount()
+                ;
 
 var app = builder.Build();
 

@@ -5,7 +5,7 @@ using App.Models.Contacts;
 namespace App.Models
 {
     //App.Models.AppDbcontext
-    public class AppDbContext :DbContext
+    public class AppDbContext :IdentityDbContext<AppUser>
     {
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
         {
@@ -21,14 +21,14 @@ namespace App.Models
         {
             base.OnModelCreating(modelBuilder);
 
-            // foreach (var entityType in modelBuilder.Model.GetEntityTypes())
-            // {
-            //     string tableName = entityType.GetTableName() ?? "";
-            //     if(tableName.StartsWith("AspNet"))
-            //     {
-            //         entityType.SetTableName(tableName.Substring(6));
-            //     }
-            // }
+            foreach (var entityType in modelBuilder.Model.GetEntityTypes())
+            {
+                string tableName = entityType.GetTableName() ?? "";
+                if(tableName.StartsWith("AspNet"))
+                {
+                    entityType.SetTableName(tableName.Substring(6));
+                }
+            }
         }
 
         public DbSet<Contact> Contacts {set;get;}
