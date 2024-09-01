@@ -8,8 +8,16 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.AspNetCore.Routing.Constraints;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 
 var builder = WebApplication.CreateBuilder(args);
+
+// Add services to the container.
+builder.Services.AddControllersWithViews();
+builder.Services.AddRazorPages();//đăng kí các dịch vụ liên quan đến razor
+builder.Services.AddDbContext<AppDbcontext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("AppDbcontext") ?? throw new InvalidOperationException("Connection string 'AppDbcontext' not found.")));
+// builder.Services.AddTransient(typeof(ILogger<>),typeof(Logger<>));// dịch vụ này tự đăng kí
 
 builder.Services.AddOptions();
 var mailSetting  = builder.Configuration.GetSection("MailSettings");
@@ -24,11 +32,6 @@ builder.Services.AddDbContext<AppDbContext>(options =>{
 
     options.UseSqlServer(builder.Configuration.GetConnectionString("AppMvcConnectionString"));
 });
-
-// Add services to the container.
-builder.Services.AddControllersWithViews();
-builder.Services.AddRazorPages();//đăng kí các dịch vụ liên quan đến razor
-// builder.Services.AddTransient(typeof(ILogger<>),typeof(Logger<>));// dịch vụ này tự đăng kí
 
 builder.Services.Configure<RazorViewEngineOptions>(options => {
     // /View/Controller/Action.cshtml mặc định
