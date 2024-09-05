@@ -173,6 +173,10 @@ app.MapControllerRoute(
     //     // có thể sử dụng RegaxRouteConstraint
     // }   // đối tượng chỉ ra các ràng buộc
 );
+app.MapControllerRoute(
+    name: "areas",
+    pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
+
 
 app.MapAreaControllerRoute(
     name: "product",

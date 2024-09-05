@@ -9,6 +9,7 @@ using App.Models;
 using App.Models.Blog;
 using Microsoft.AspNetCore.Authorization;
 using App.Data;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 namespace App.Areas_Blog_Controllers_
 {
@@ -179,12 +180,47 @@ namespace App.Areas_Blog_Controllers_
             {
                 return NotFound();
             }
+
+            bool canUpdate=true;
+
             if(category.ParentCategoryId==category.Id)
             {
                 ModelState.AddModelError(string.Empty,"Phải chọn danh mục cha khác");
+                canUpdate =false;
             }
 
-            if (ModelState.IsValid && category.ParentCategoryId!=category.Id)
+            if (canUpdate && category.ParentCategoryId!=category.Id)
+            {
+                var childCates=(from c in _context.Categories select c)
+                                .Include(c=> c.CategoryChildren)
+                                .ToList()
+                                .Where(c=>c.ParentCategoryId == category.Id);
+                
+                // Func check ID
+                Func<List<Category>,bool>? checkCateIds = null!;
+                checkCateIds = (cates) =>
+                {
+                    foreach (var cate in cates)
+                    {
+                        Console.WriteLine(cate.Title);
+                        if(cate.Id == category.ParentCategoryId)
+                        {
+                            canUpdate=false;
+                            ModelState.AddModelError(string.Empty,"Phải chọn danh mục cha khác");
+                            return true;
+                        }
+                        if(cate.CategoryChildren!=null)
+                        {
+                            return checkCateIds(cate.CategoryChildren.ToList());
+                        }
+                    }
+                    return false;
+                };
+
+                checkCateIds(childCates.ToList());
+            }
+
+            if(ModelState.IsValid && canUpdate)
             {
                 try
                 {
@@ -192,7 +228,12 @@ namespace App.Areas_Blog_Controllers_
                     {
                         category.ParentCategoryId=null;
                     }
-                    _context.Update(category);
+                    var dtc = _context.Categories.FirstOrDefault(c => c.Id ==id);
+                    if (dtc != null)  // Kiểm tra xem dtc có phải là null hay không
+                    {
+                        _context.Entry(dtc).State = EntityState.Detached;
+                    }
+                     _context.Update(category);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
