@@ -17,6 +17,18 @@
     <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
 </div>
 
+<textarea id="summernoteEditor"></textarea>
+<textarea id="summernoteEditor2"></textarea>
+@{
+    var summernote = new  App.Models.Summernote("#summernoteEditor"){
+        height=400
+    };
+    var summernote2 = new  App.Models.Summernote("#summernoteEditor2",false);
+}
+
+<partial name="_Summernote" model="summernote"/>
+<partial name="_Summernote" model="summernote2"/>
+
 <p>
     @Url.ActionLink()
 </p>

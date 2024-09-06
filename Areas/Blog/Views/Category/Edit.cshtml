@@ -42,3 +42,7 @@
     <a asp-action="Index">Danh sách chuyên mục</a>
 </div>
 
+@{
+    var summernote = new App.Models.Summernote("#Dscription");
+}
+<partial name="_Summernote" model="summernote"/>

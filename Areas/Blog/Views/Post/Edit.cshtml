@@ -69,3 +69,9 @@
 
     <partial name="_ValidationScriptsPartial" />
 }
+@{
+    var summernote = new App.Models.Summernote("#Content"){
+        height=300
+    };
+}
+<partial name="_Summernote" model="summernote"/>
