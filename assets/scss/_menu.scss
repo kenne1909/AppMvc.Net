@@ -1,5 +1,5 @@
 .app-navbar{
-    background: rgba(0, 0, 0, 0.8);
+    background: #122153;
     .text-dark{
         color: #b9c3ce !important;//ghi đè
         &:hover {
@@ -7,13 +7,38 @@
         }
     }
     .navbar-brand {
-        color: #a57dea;
+        color: white;
         &:hover {
-            color: #d727da !important;
+            color: #b6aab7 !important;
         }
     }
     .dropdown-toggle{
-        border-color: #a562ad;
-        color:  #ae84ba;
+        border-color: transparent !important;
+        color:  white;
+    }
+}
+
+.categorysidebar{
+    ul,li{
+        list-style: none;
+        padding-left: 5px;
+    }
+    a{
+        text-decoration: none;
+        &:hover{
+            color: #a04747;
+        }
+        &.active{
+            color: red;
+        }
+    }
+    >ul>li>a{
+        font-weight: bold;
+    }
+    h3{
+        text-transform: uppercase;//chữ hoa
+        font-size: 1.3em;//gấp 1,3 chữ bth
+        border-bottom: 1px solid blue;
+        padding-bottom: 6px;
     }
 }

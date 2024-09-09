@@ -1,0 +1,19 @@
+.pagination{
+    justify-content: center;
+    a{
+        text-decoration: none;//xóa dấu gạch dưới
+        padding: 8px 16px;
+        color: black;
+        background-color: #f1f1f1;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        margin: 0 4px;
+        &:hover{
+            background-color: #98E0FF;
+        }
+        &.active{
+            background-color: #98E0FF;
+            color: white;
+        }
+    }
+}

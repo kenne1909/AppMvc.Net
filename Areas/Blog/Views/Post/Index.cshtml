@@ -4,39 +4,8 @@
     ViewData["Title"] = "Danh sách Blog";
     var currentPage = ViewBag.CurrentPage ?? 1; 
     var totalPages = ViewBag.TotalPages ?? 1; 
-    var searchTerm = ViewBag.SearchTerm as string;
     int counter =1;
 }
-<style>
-    .pagination {
-        @* display: flex; *@
-        justify-content: center;
-        @* align-items: center; *@
-        @* position: fixed; *@
-        @* bottom: 20px; *@
-        @* left: 50%;*@
-        @* transform: translateX(-50%); *@
-    }
-
-    .pagination a {
-        @* display: inline-block; *@
-        padding: 8px 16px;
-        text-decoration: none;
-        color: black;
-        background-color: #f1f1f1;
-        border: 1px solid #ddd;
-        border-radius: 5px;
-        margin: 0 4px; 
-    }
-
-    .pagination a:hover {
-        background-color: #98E0FF;
-    }
-    .pagination a.active {
-    background-color: #98E0FF;
-    color: white;
-}
-</style>
 
 
 <h1>@ViewData["Title"]</h1>
@@ -99,28 +68,28 @@
     </tbody>
 </table>
 <div class="pagination">
-    @if (currentPage > 1)
-    {
-        <a asp-area="Blog" asp-controller="Post" asp-action="Index" asp-route-page="@(currentPage - 1)" >&lt;</a>
-    }
-
-    @for (int i = 1; i <= totalPages; i++)
-    {
-        if (i == currentPage)
+        @if (currentPage > 1)
         {
-            <a asp-area="Blog" asp-controller="Post" asp-action="Index" asp-route-page="@i" class="active">@i</a>
+            <a href="@Url.RouteUrl("pagepost", new { page = currentPage - 1 })">&lt;</a>
         }
-        else
-        {
-            <a asp-area="Blog" asp-controller="Post" asp-action="Index" asp-route-page="@i">@i</a>
-        }
-    }
 
-    @if (currentPage < totalPages)
-    {
-        <a asp-area="Blog" asp-controller="Post" asp-action="Index" asp-route-page="@(currentPage + 1)" >&gt;</a>
-    }
-</div>
+        @for (int i = 1; i <= totalPages; i++)
+        {
+            if (i == currentPage)
+            {
+                <a href="@Url.RouteUrl("pagepost", new { page = i })" class="active">@i</a>
+            }
+            else
+            {
+                <a href="@Url.RouteUrl("pagepost", new { page = i })">@i</a>
+            }
+        }
+
+        @if (currentPage < totalPages)
+        {
+            <a href="@Url.RouteUrl("pagepost", new {  page = currentPage + 1 })">&gt;</a>
+        }
+    </div>
 
 
 

@@ -11,7 +11,7 @@ using Microsoft.AspNetCore.Authorization;
 using App.Data;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
-namespace App.Areas_Blog_Controllers_
+namespace App.Areas.Blog.Controllers
 {
     [Area("Blog")]
     [Route("admin/blog/category/[action]/{id?}")]

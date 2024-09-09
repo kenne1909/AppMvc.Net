@@ -164,6 +164,7 @@ app.MapGet("/sayhi",async (context) => {
 // app.MapDefaultControllerRoute
 // app.MapAreaControllerRoute       // Tạo ra những điểm endpoint đến những controller mà controller nằm trong những area(mục riêng)
 
+
 app.MapControllers();
 
 app.MapControllerRoute(

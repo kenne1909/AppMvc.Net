@@ -92,7 +92,7 @@ namespace App.Areas.Database.Controllers
             var fakerCategory = new Faker<Category>();// dungf dde phat sinh ra cac doi tuong category
             int cm=1;
             fakerCategory.RuleFor(c => c.Title,fk => $"CM{cm++}" + fk.Lorem.Sentence(1,2).Trim('.'));
-            fakerCategory.RuleFor(c => c.Dscription,fk => fk.Lorem.Sentence(5) + "[fakeData]");
+            fakerCategory.RuleFor(c => c.Dscription,fk => fk.Lorem.Paragraphs(5) + "[fakeData]");
             fakerCategory.RuleFor(c => c.Slug , fk => fk.Lorem.Slug());//
 
             var cate1 = fakerCategory.Generate();
@@ -119,7 +119,7 @@ namespace App.Areas.Database.Controllers
             fakerPost.RuleFor(p => p.AuthorId , f =>user?.Id);
             fakerPost.RuleFor(p => p.Content, f => f.Lorem.Paragraphs(7)+"[fakeData]");
             fakerPost.RuleFor(p => p.DateCreated,f => f.Date.Between(new DateTime(2023,1,1), new DateTime(2024,1,1)));
-            fakerPost.RuleFor(p => p.Description, f => f.Lorem.Sentence(3));
+            fakerPost.RuleFor(p => p.Description, f => string.Join(" ", Enumerable.Range(1, 3).Select(_ => f.Lorem.Sentence(3, 6))));
             fakerPost.RuleFor(p => p.Published, f => true);
             fakerPost.RuleFor(p => p.Slug,f => f.Lorem.Slug());
             fakerPost.RuleFor(p => p.Title,f =>$"Bài {bv++}" + f.Lorem.Sentence(3,4).Trim('.'));

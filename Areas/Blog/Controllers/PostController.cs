@@ -17,7 +17,7 @@ using Bogus.DataSets;
 namespace App.Areas.Blog.Controllers
 {
     [Area("Blog")]
-    [Route("admin/blog/post/{action}/{id?}")]
+    [Route("admin/blog/post/{action}/{id?}", Name ="pagepost")]
 
     [Authorize(Roles =RoleName.Administrator +","+RoleName.Editor)]
     public class PostController : Controller
@@ -35,7 +35,7 @@ namespace App.Areas.Blog.Controllers
         }
 
         // GET: Post
-        //[Route("admin/blog/post/index/{page?}")]
+        // [Route("admin/blog/post/index/{page?}")]
         public async Task<IActionResult> Index([FromQuery(Name ="page")]int page = 1)
         {
             int pageSize = 10;
