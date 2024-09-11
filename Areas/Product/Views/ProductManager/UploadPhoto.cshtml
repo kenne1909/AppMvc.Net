@@ -1,0 +1,136 @@
+@model App.Areas.Product.Controllers.ProductManagerController.UploadOneFile
+@{
+    ProductModel? product=  ViewData["product"] as ProductModel;
+}
+<h1>Upload Photo: @product?.Title</h1>
+
+<form method="post" enctype="multipart/form-data">
+    <label asp-for="@Model.FileUpload"></label>
+    <input asp-for="@Model.FileUpload"/>
+    <span asp-validation-for="@Model.FileUpload"></span>
+    <button class="btn btn-primary" asp-action="UploadPhoto" asp-route-id="@product!.ProductId">Upload</button>
+</form>
+
+<hr>
+<input class="collapse"  type="file" id="selectfileupload" onchange="AutoUploadPhoto()"/>  
+<span class="btn btn-primary" onclick="ClickButtonUpload()">Upload</span>
+
+
+
+<div id="box-photo-upload" class="d-flex flex-wrap photo-upload" data-id="@product.ProductId"> @*chứa id của sản phẩm*@
+    @* @foreach(var photo in product.Photos!)
+    {
+        <div class="photodetail w-25 p-1">
+            <img class="w-100" src="/contents/Products/@photo.FileName" alt="">
+            <span class="btn btn-danger" data-id="@photo.id">Delete</span>
+        </div>
+    } *@
+</div>
+
+@section Scripts{
+    <script>
+        function AutoUploadPhoto()
+        {
+            //alert("bạn vừa chọn 1 file");
+            var formData= new FormData();
+            var id = $("#box-photo-upload").data("id");
+            formData.append("id",id);
+
+            var sofile = document.getElementById("selectfileupload").files.length;// đọc dữ liệu có thử trong input có file nàok
+            if(sofile ==0) return;
+
+            var fileData = document.getElementById("selectfileupload").files[0];
+            formData.append("FileUpload",fileData);
+
+            var urlUpload="@Url.Action("UploadPhotoApi")";
+
+            $.ajax({
+                    data: formData,
+                    cache:false,
+                    url:urlUpload,
+                    type:"POST",
+                    contentType: false,
+                    processData: false,
+                    success:function(data)
+                    {
+                        @* console.log(data); *@
+                        //.. xử lý dữ liệu lấy đc
+                        LoadPhotos();
+                        
+                    }
+            });
+        }
+
+        function ClickButtonUpload()
+        {
+            $("#selectfileupload").click();
+        }
+
+        function setClickDeletePhoto()
+        {
+            $("#box-photo-upload .photodetail span").click(function(){ 
+                if(confirm("Có chắc chắn xóa ảnh?") !=true) return
+                
+                var spanButton =$(this);
+                var id= spanButton.data("id");
+                //alert(id);
+                var formData= new FormData();
+                formData.append("id",id);
+                var urlDeletePhoto="@Url.Action("DeletePhoto")";
+
+                $.ajax({
+                    data: formData,
+                    cache:false,
+                    url:urlDeletePhoto,
+                    type:"POST",
+                    contentType: false,
+                    processData: false,
+                    success:function(data)
+                    {
+                        @* console.log(data); *@
+                        //.. xử lý dữ liệu lấy đc
+                        LoadPhotos();
+                    }
+                });
+            })
+        }
+        function LoadPhotos(){
+            var box = $("#box-photo-upload");
+            var productID =box.data("id");//đọc thuộc tính data-id
+            @* console.log(productID); *@
+            box.empty();//xóa tất cả các phần tử bên trong box nếu có
+
+            var formData= new FormData();
+            formData.append("id",productID);
+            var urlListPhoto="@Url.Action("ListPhotos")";
+
+            $.ajax({
+                data: formData,
+                cache:false,
+                url:urlListPhoto,
+                type:"POST",
+                contentType: false,
+                processData: false,
+                success:function(data)
+                {
+                    @* console.log(data); *@
+                    //.. xử lý dữ liệu lấy đc
+                    data.photos.forEach(function(item){
+                        @* console.log(item.id);
+                        console.log(item.path); *@
+                        var e= $('<div class="photodetail w-25 p-1">'
+                            + '<img class="w-100" src="'+item.path+'">'
+                            + '<span class="btn btn-danger" data-id="'+item.id+'">Delete</span>'
+                        + '</div>')
+
+                        box.append(e);
+                    });
+                    setClickDeletePhoto();
+                }
+            });
+        }
+        $(document).ready(function(){
+            LoadPhotos();
+        });
+    </script>
+}

@@ -1,0 +1,104 @@
+@model IEnumerable<App.Models.Product.ProductModel>
+@*khi bạn làm việc với danh sách các sản phẩm*@
+@{
+    ViewData["Title"] = "Danh sách sản phẩm";
+    var currentPage = ViewBag.CurrentPage ?? 1; 
+    var totalPages = ViewBag.TotalPages ?? 1; 
+    int counter =1;
+}
+
+
+<h1>@ViewData["Title"]</h1>
+
+<partial name="_AlertMessage" />
+
+<p>
+    <a asp-action="Create">Tạo sản phẩm mới</a>
+</p>
+<p>Tổng số sản phẩm: @ViewBag.totalItems</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                STT
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Title)
+            </th>
+             <th>
+                @Html.DisplayNameFor(model => model.Price)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Published)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Author)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.DateUpdated)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>@((currentPage - 1) * ViewBag.PageSize + counter)</td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.ProductId">@Html.DisplayFor(modelItem => item.Title)</a> 
+                <br>
+                <small>
+                    @string.Join(",",item.productCategoryProducts!.Select(pc =>pc.Category!.Title));
+                    @*lấy danh sách tên của các danh mục liên kết với sản phẩm hiện tại*@
+                    @*Select():Nó duyệt qua từng phần tử trong danh sách và thực hiện một thao tác nào đó trên mỗi phần tử*@
+                </small>
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Price)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Published)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Author!.UserName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DateUpdated)
+            </td>
+            <td>
+        
+                <a asp-action="Details" asp-route-id="@item.ProductId">Chi tiết</a> |
+                <a asp-action="Delete" asp-route-id="@item.ProductId">Xóa</a>
+            </td>
+        </tr>
+        counter++;
+    }
+    </tbody>
+</table>
+<div class="pagination">
+        @if (currentPage > 1)
+        {
+            <a href="@Url.RouteUrl("pageproduct", new { page = currentPage - 1 })">&lt;</a>
+        }
+
+        @for (int i = 1; i <= totalPages; i++)
+        {
+            if (i == currentPage)
+            {
+                <a href="@Url.RouteUrl("pageproduct", new { page = i })" class="active">@i</a>
+            }
+            else
+            {
+                <a href="@Url.RouteUrl("pageproduct", new { page = i })">@i</a>
+            }
+        }
+
+        @if (currentPage < totalPages)
+        {
+            <a href="@Url.RouteUrl("pageproduct", new {  page = currentPage + 1 })">&gt;</a>
+        }
+    </div>
+
+
+
+

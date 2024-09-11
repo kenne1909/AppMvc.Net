@@ -1,6 +1,7 @@
 using App.Data;
 using App.Models;
 using App.Models.Blog;
+using App.Models.Product;
 using Bogus;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -79,16 +80,89 @@ namespace App.Areas.Database.Controllers
             } 
 
             SeedPostCategory();
+            SeedProductCategory();
+
 
             StatusMessage ="Vừa seed Database";
             return RedirectToAction("Index");
         }
+        private void SeedProductCategory()
+        {
+            //Radomizer.Seed= new Random(8675309);
+
+            _appDbContext.CategoryProducts.RemoveRange(_appDbContext.CategoryProducts.Where(c =>c.Description!.Contains("[fakeData]")));
+            _appDbContext.Products.RemoveRange(_appDbContext.Products.Where(p => p.Content!.Contains("[fakeData]")));
+
+            _appDbContext.SaveChanges();
+
+            var fakerCategory = new Faker<CategoryProduct>();// dungf dde phat sinh ra cac doi tuong category
+            int cm=1;
+            fakerCategory.RuleFor(c => c.Title,fk => $"Nhom SP {cm++}" + fk.Lorem.Sentence(1,2).Trim('.'));
+            fakerCategory.RuleFor(c => c.Description,fk => fk.Lorem.Paragraphs(5) + "[fakeData]");
+            fakerCategory.RuleFor(c => c.Slug , fk => fk.Lorem.Slug());//
+
+            var cate1 = fakerCategory.Generate();
+                var cate11= fakerCategory.Generate();
+                var cate12= fakerCategory.Generate();
+            var cate2= fakerCategory.Generate();
+                var cate21= fakerCategory.Generate();
+                    var cate221= fakerCategory.Generate();
+
+            cate11.ParentCategory = cate1;
+            cate12.ParentCategory = cate1;
+            cate21.ParentCategory = cate2;
+            cate221.ParentCategory = cate21;
+
+            var categories = new CategoryProduct[]{ cate1, cate2,cate11,cate12,cate21,cate221};
+            _appDbContext.CategoryProducts.AddRange(categories);
+
+            //Post
+            var rCateIndex = new Random();
+            int bv= 1;
+            var  user = _userManager.GetUserAsync(this.User).Result;
+             
+            var fakerProduct= new Faker<ProductModel>();
+            fakerProduct.RuleFor(p => p.AuthorId , f =>user?.Id);
+            fakerProduct.RuleFor(p => p.Content, f => f.Commerce.ProductDescription()+"[fakeData]");
+            fakerProduct.RuleFor(p => p.DateCreated,f => f.Date.Between(new DateTime(2023,1,1), new DateTime(2024,1,1)));
+            fakerProduct.RuleFor(p => p.Description, f => string.Join(" ", Enumerable.Range(1, 3).Select(_ => f.Lorem.Sentence(3, 6))));
+            fakerProduct.RuleFor(p => p.Published, f => true);
+            fakerProduct.RuleFor(p => p.Slug,f => f.Lorem.Slug());
+            fakerProduct.RuleFor(p => p.Title,f =>$"SP {bv++}" + f.Commerce.ProductName());
+            fakerProduct.RuleFor(p => p.Price,f => int.Parse(f.Commerce.Price(500,100,0)));
+
+            List<ProductModel> products = new List<ProductModel>();
+            List<ProductCategoryProduct> productCategories =new List<ProductCategoryProduct>();
+
+            for(int  i=0;i<40;i++)
+            {
+                var product = fakerProduct.Generate();
+                product.DateUpdated = product.DateCreated;
+
+                products.Add(product);
+
+                productCategories.Add(new ProductCategoryProduct(){
+                    Product = product,
+                    Category = categories[rCateIndex.Next(5)]// bawngf 1 trong nhung catefory ngau nhien
+                });
+            }
+
+            _appDbContext.AddRange(products);
+            _appDbContext.AddRange(productCategories);
+            //End Post
+
+            _appDbContext.SaveChanges();
+        }
+
         private void SeedPostCategory()
         {
             //Radomizer.Seed= new Random(8675309);
 
             _appDbContext.Categories.RemoveRange(_appDbContext.Categories.Where(c =>c.Dscription!.Contains("[fakeData]")));
             _appDbContext.Posts.RemoveRange(_appDbContext.Posts.Where(p => p.Content!.Contains("[fakeData]")));
+
+            _appDbContext.SaveChanges();
+
             var fakerCategory = new Faker<Category>();// dungf dde phat sinh ra cac doi tuong category
             int cm=1;
             fakerCategory.RuleFor(c => c.Title,fk => $"CM{cm++}" + fk.Lorem.Sentence(1,2).Trim('.'));

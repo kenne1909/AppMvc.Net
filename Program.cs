@@ -42,7 +42,7 @@ builder.Services.Configure<RazorViewEngineOptions>(options => {
     options.ViewLocationFormats.Add("/MyView/{1}/{0}"+RazorViewEngine.ViewExtension);//RazorViewEngine.ViewExtension phần mở rộng
 });
 
-builder.Services.AddSingleton<ProductService>();
+// builder.Services.AddSingleton<ProductService>();
 // builder.Services.AddSingleton<ProductService,ProductService>();
 // builder.Services.AddSingleton(typeof(ProductService));
 // builder.Services.AddSingleton(typeof(ProductService),typeof(ProductService));

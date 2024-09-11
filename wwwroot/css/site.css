@@ -118,3 +118,16 @@ body {
   background-color: #98E0FF;
   color: white;
 }
+
+.photodetail {
+  position: relative;
+}
+.photodetail span {
+  position: absolute;
+  bottom: 50%;
+  left: 50%;
+  display: none;
+}
+.photodetail:hover span {
+  display: block;
+}

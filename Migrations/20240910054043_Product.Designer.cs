@@ -4,6 +4,7 @@ using App.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace App.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240910054043_Product")]
+    partial class Product
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -320,27 +323,6 @@ namespace App.Migrations
                     b.ToTable("Product");
                 });
 
-            modelBuilder.Entity("App.Models.Product.ProductPhoto", b =>
-                {
-                    b.Property<int>("id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("id"));
-
-                    b.Property<string>("FileName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("ProductID")
-                        .HasColumnType("int");
-
-                    b.HasKey("id");
-
-                    b.HasIndex("ProductID");
-
-                    b.ToTable("ProductPhoto");
-                });
-
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
                 {
                     b.Property<string>("Id")
@@ -528,7 +510,7 @@ namespace App.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("App.Models.Product.ProductModel", "Product")
+                    b.HasOne("App.Models.Product.ProductModel", "Post")
                         .WithMany("productCategoryProducts")
                         .HasForeignKey("ProductID")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -536,7 +518,7 @@ namespace App.Migrations
 
                     b.Navigation("Category");
 
-                    b.Navigation("Product");
+                    b.Navigation("Post");
                 });
 
             modelBuilder.Entity("App.Models.Product.ProductModel", b =>
@@ -546,17 +528,6 @@ namespace App.Migrations
                         .HasForeignKey("AuthorId");
 
                     b.Navigation("Author");
-                });
-
-            modelBuilder.Entity("App.Models.Product.ProductPhoto", b =>
-                {
-                    b.HasOne("App.Models.Product.ProductModel", "Product")
-                        .WithMany("Photos")
-                        .HasForeignKey("ProductID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Product");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -627,8 +598,6 @@ namespace App.Migrations
 
             modelBuilder.Entity("App.Models.Product.ProductModel", b =>
                 {
-                    b.Navigation("Photos");
-
                     b.Navigation("productCategoryProducts");
                 });
 #pragma warning restore 612, 618
