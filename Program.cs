@@ -20,6 +20,12 @@ builder.Services.AddDbContext<AppDbcontext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("AppDbcontext") ?? throw new InvalidOperationException("Connection string 'AppDbcontext' not found.")));
 // builder.Services.AddTransient(typeof(ILogger<>),typeof(Logger<>));// dịch vụ này tự đăng kí
 
+builder.Services.AddDistributedMemoryCache();   //Đăng ký dịch vụ lưu cache trong bộ nhớ (Session sẽ sử dụng nó)
+builder.Services.AddSession(cfg => {            // Đăng ký dịch vụ Session
+    cfg.Cookie.Name = "lehoan";                 // Đặt tên Session - tên này sử dụng ở Browser (Cookie)
+    cfg.IdleTimeout = new TimeSpan(0,30, 0);    // Thời gian tồn tại của Session
+});
+
 builder.Services.AddOptions();
 var mailSetting  = builder.Configuration.GetSection("MailSettings");
 builder.Services.Configure<MailSettings>(mailSetting);
@@ -120,6 +126,8 @@ builder.Services.AddAuthorization(option =>{
     });
 });
 
+builder.Services.AddTransient<CartSerivce>();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -138,6 +146,8 @@ app.UseStaticFiles(new StaticFileOptions(){
     ),
     RequestPath = "/contents"//khi truy cập 1 file tĩnh  contents/1.jpg => Uploads/1.jpg
 });
+
+app.UseSession();
 
 app.AddStatusCodePage();    // tùy biến respone lỗi: 404 -> 599
 
