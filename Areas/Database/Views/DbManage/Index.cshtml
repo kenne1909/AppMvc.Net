@@ -1,8 +1,10 @@
 @using Microsoft.EntityFrameworkCore
-
+@using App.Menu
+@inject AdminSidebarService _AdminSidebarService;
 @inject AppDbContext dbContext;
 @{
     ViewData["Title"]="Thông tin Db";
+    Layout="/Views/Shared/_LayoutAdmin.cshtml";
     var connect = dbContext.Database.GetDbConnection();
     var dbName=connect.Database;
     var can_connect= dbContext.Database.CanConnect();// nếu bằng true thì có thể truy vấn để kết nối dl/fale là k tồn tại or k chạy
@@ -59,4 +61,11 @@
     <a class="btn btn-danger" asp-action="DeleteDb">Xóa Database: @dbName</a>
     <a class="btn btn-danger" asp-action="SeedData">Seed Data</a>
     
+}
+@{
+    _AdminSidebarService.SetActive("DbManage","Index","Database");
+}
+@section Sidebar
+{
+    @Html.Raw(_AdminSidebarService.renderHtml())
 }

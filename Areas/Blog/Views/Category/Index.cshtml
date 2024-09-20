@@ -1,10 +1,12 @@
+@using App.Menu
+@inject AdminSidebarService _AdminSidebarService;
 @model IEnumerable<App.Models.Blog.Category>
 
 @{
+    Layout="/Views/Shared/_LayoutAdmin.cshtml";
     ViewData["Title"] = "Chuyên mục Blog";
 }
 
-<h1>@ViewData["Title"]</h1>
 
 <p>
     <a asp-action="Create" class="btn btn-primary btn-sm">Tạo chuyên mục</a>
@@ -53,4 +55,11 @@
             }
         }
     }
+}
+@{
+    _AdminSidebarService.SetActive("Category","Index","Blog");
+}
+@section Sidebar
+{
+    @Html.Raw(_AdminSidebarService.renderHtml())
 }

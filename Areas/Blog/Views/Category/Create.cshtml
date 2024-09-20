@@ -1,6 +1,8 @@
 @model App.Models.Blog.Category
-
+@using App.Menu
+@inject AdminSidebarService _AdminSidebarService;
 @{
+    Layout="/Views/Shared/_LayoutAdmin.cshtml";
     ViewData["Title"] = "Tạo chuyên mục Blog";
     @* var items = new List<SelectListItem>();
         items.Add(new SelectListItem(){
@@ -23,7 +25,6 @@
     var item = new SelectList(data,"giatri","ten",2);//giá trị 2 làm giá trị mặt định
 }
 
-<h1>@ViewData["Title"]</h1>
 
 <h4>Category</h4>
 <hr />
@@ -65,3 +66,10 @@
     var summernote = new App.Models.Summernote("#Dscription");
 }
 <partial name="_Summernote" model="summernote"/>
+@{
+    _AdminSidebarService.SetActive("Category","Create","Blog");
+}
+@section Sidebar
+{
+    @Html.Raw(_AdminSidebarService.renderHtml())
+}

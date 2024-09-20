@@ -1,14 +1,15 @@
+@using App.Menu
+@inject AdminSidebarService _AdminSidebarService;
 @model IEnumerable<App.Models.Product.ProductModel>
 @*khi bạn làm việc với danh sách các sản phẩm*@
 @{
+    Layout="/Views/Shared/_LayoutAdmin.cshtml";
     ViewData["Title"] = "Danh sách sản phẩm";
     var currentPage = ViewBag.CurrentPage ?? 1; 
     var totalPages = ViewBag.TotalPages ?? 1; 
     int counter =1;
 }
 
-
-<h1>@ViewData["Title"]</h1>
 
 <partial name="_AlertMessage" />
 
@@ -98,7 +99,10 @@
             <a href="@Url.RouteUrl("pageproduct", new {  page = currentPage + 1 })">&gt;</a>
         }
     </div>
-
-
-
-
+@{
+    _AdminSidebarService.SetActive("ProductManager","Index","Product");
+}
+@section Sidebar
+{
+    @Html.Raw(_AdminSidebarService.renderHtml())
+}

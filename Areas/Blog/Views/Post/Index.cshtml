@@ -1,6 +1,8 @@
 @model IEnumerable<App.Models.Blog.Post>
-
+@using App.Menu
+@inject AdminSidebarService _AdminSidebarService;
 @{
+    Layout="/Views/Shared/_LayoutAdmin.cshtml";
     ViewData["Title"] = "Danh sách Blog";
     var currentPage = ViewBag.CurrentPage ?? 1; 
     var totalPages = ViewBag.TotalPages ?? 1; 
@@ -8,7 +10,6 @@
 }
 
 
-<h1>@ViewData["Title"]</h1>
 
 <partial name="_AlertMessage" />
 
@@ -90,7 +91,13 @@
             <a href="@Url.RouteUrl("pagepost", new {  page = currentPage + 1 })">&gt;</a>
         }
     </div>
-
+@{
+    _AdminSidebarService.SetActive("Post","Index","Blog");
+}
+@section Sidebar
+{
+    @Html.Raw(_AdminSidebarService.renderHtml())
+}
 
 
 

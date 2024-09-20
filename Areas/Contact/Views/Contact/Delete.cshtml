@@ -1,10 +1,11 @@
+@using App.Menu
+@inject AdminSidebarService _AdminSidebarService;
 @model App.Models.Contacts.Contact
 
 @{
+    Layout="/Views/Shared/_LayoutAdmin.cshtml";
     ViewData["Title"] = "Xóa liên hệ";
 }
-
-<h1>@ViewData["Title"]</h1>
 
 <h3>Bạn có chắc chắn xóa liên hệ?</h3>
 <div>
@@ -48,3 +49,11 @@
         <a asp-action="Index">Danh sách liên hệ</a>
     </form>
 </div>
+@{
+    _AdminSidebarService.SetActive("Contact","Index","Contact");
+}
+@section Sidebar
+{
+    @Html.Raw(_AdminSidebarService.renderHtml())
+}
+

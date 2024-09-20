@@ -1,10 +1,12 @@
 using System.Net;
 using App.Data;
 using App.ExtendMethods;
+using App.Menu;
 using App.Models;
 using App.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.AspNetCore.Routing.Constraints;
 using Microsoft.EntityFrameworkCore;
@@ -128,6 +130,9 @@ builder.Services.AddAuthorization(option =>{
 
 builder.Services.AddTransient<CartSerivce>();
 
+builder.Services.AddTransient<IActionContextAccessor,ActionContextAccessor>();
+builder.Services.AddTransient<AdminSidebarService>();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -139,7 +144,7 @@ if (!app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-app.UseStaticFiles();
+app.UseStaticFiles();   // truy cập file tĩnh
 app.UseStaticFiles(new StaticFileOptions(){
     FileProvider= new PhysicalFileProvider(
         Path.Combine(Directory.GetCurrentDirectory(),"Uploads")
@@ -147,7 +152,7 @@ app.UseStaticFiles(new StaticFileOptions(){
     RequestPath = "/contents"//khi truy cập 1 file tĩnh  contents/1.jpg => Uploads/1.jpg
 });
 
-app.UseSession();
+app.UseSession();       // sử dụng session
 
 app.AddStatusCodePage();    // tùy biến respone lỗi: 404 -> 599
 
@@ -191,16 +196,6 @@ app.MapControllerRoute(
     //     // có thể sử dụng RegaxRouteConstraint
     // }   // đối tượng chỉ ra các ràng buộc
 );
-app.MapControllerRoute(
-    name: "areas",
-    pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
-
-
-app.MapAreaControllerRoute(
-    name: "product",
-    pattern: "{controller}/{action=Index}/{id?}",
-    areaName: "ProductManage"
-);
 
 //chỉ thực hiện trên những controller k có area
 app.MapControllerRoute(
@@ -212,6 +207,12 @@ app.MapControllerRoute(
     //     //id=3// pattern: "start-here{id}" thì ở đây k có id vẫn đc và nếu pattern k có id thì nó sẽ mặc định là 3
     // }// kiểu vô danh chứa các tham số của route có các ket : controller; action;area
 );
+
+app.MapControllerRoute(
+    name: "areas",
+    pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
+
+
 
 
 //sử dụng các attibute để tạo ra các route -> đc viết trực tiếp trong controller or action
@@ -225,6 +226,5 @@ app.MapControllerRoute(
 
 app.MapRazorPages();
 app.Run();
-
 
 //dotnet aspnet-codegenerator -h

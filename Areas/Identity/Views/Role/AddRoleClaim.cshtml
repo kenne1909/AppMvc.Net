@@ -1,5 +1,8 @@
+@using App.Menu
+@inject AdminSidebarService _AdminSidebarService;
 @model EditClaimModel
 @{
+    Layout="/Views/Shared/_LayoutAdmin.cshtml";
     ViewData["Title"] = "Gán đặc tính cho role";
 }
 <h2>@ViewData["Title"]: @Model.role?.Name</h2>
@@ -34,3 +37,11 @@
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 }
+@{
+    _AdminSidebarService.SetActive("Role","Index","Identity");
+}
+@section Sidebar
+{
+    @Html.Raw(_AdminSidebarService.renderHtml())
+}
+

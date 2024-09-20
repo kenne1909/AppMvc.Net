@@ -1,10 +1,12 @@
+@using App.Menu
+@inject AdminSidebarService _AdminSidebarService;
 @model IEnumerable<App.Models.Contacts.Contact>
 
 @{
+    Layout="/Views/Shared/_LayoutAdmin.cshtml";
     ViewData["Title"] = "Danh dách liên hệ";
+    
 }
-
-<h1>Danh dách liên hệ</h1>
 
 <table class="table">
     <thead>
@@ -47,3 +49,11 @@
 }
     </tbody>
 </table>
+@{
+    _AdminSidebarService.SetActive("Contact","Index","Contact");
+}
+@section Sidebar
+{
+    @Html.Raw(_AdminSidebarService.renderHtml())
+}
+

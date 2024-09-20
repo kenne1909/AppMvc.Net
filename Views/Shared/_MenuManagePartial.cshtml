@@ -6,18 +6,5 @@
 }
 @if(result.Succeeded)
 {
-    <div class="dropdown">
-        <a class="btn btn-outline-danger dropdown-toggle" href="#" id="managedropdownmenu" data-bs-toggle="dropdown">Manage</a>
-        <div class="dropdown-menu dropdown-menu-end" aria-labelledby="managedropdownmenu">
-            <a class="dropdown-item" asp-action="Index" asp-controller="DbManage" asp-area="Database">Database</a>
-            <a class="dropdown-item" asp-action="Index" asp-controller="Contact" asp-area="Contact">Quản lý liên hệ</a>
-            <a class="dropdown-item" asp-action="Index" asp-controller="Role" asp-area="Identity">Quản lý role(vai trò)</a>
-            <a class="dropdown-item" asp-action="Index" asp-controller="User" asp-area="Identity">Quản lý thành viên</a>
-            <a class="dropdown-item" asp-action="Index" asp-controller="Category" asp-area="Blog">Quản lý chuyên mục blog</a>
-            <a class="dropdown-item" asp-action="Index" asp-controller="Post" asp-area="Blog">Quản lý bài viết blog</a>
-            <a class="dropdown-item" asp-action="Index" asp-controller="CategoryProduct" asp-area="Product">Quản lý chuyên mục sản phẩm</a>
-            <a class="dropdown-item" asp-action="Index" asp-controller="ProductManager" asp-area="Product">Quản lý sản phẩm</a>
-            <a target="_blank" class="dropdown-item" asp-action="Index" asp-controller="FileManager" asp-area="Files">Quản lý Files</a>
-        </div>
-    </div>
+    <a class="nav-link text-light" asp-action="Index" asp-controller="AdminCP" asp-area="AdminCP"><i class="fas fa-cog"></i> Quản tị</a>
 }
